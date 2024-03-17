@@ -11,7 +11,7 @@ import Badge from '@material-ui/core/Badge';
 
 
 import { Wrapper, StyledButton } from "./App.style";
-import Laoder from "./loader/Laoder";
+// import Laoder from "./loader/Laoder";
 
 
 export type CardItemType = {
@@ -58,13 +58,13 @@ const App = () => {
     setCartItems(prev => prev.reduce((ack, item) => {
       if (item.id === id) {
         if (item.amount === 1) return ack;
-        return [...ack, { ...item, amount: item.amount + 1 }];
+        return [...ack, { ...item, amount: item.amount - 1 }];
       } else {
         return [...ack, item];
       }
     }, [] as CardItemType[]))
   }
-  if (isLoading) return <Laoder />;
+  if (isLoading) return <LinearProgress />;
   if (error) return <div>Something Went Wrong....</div>
   return (
     <Wrapper>
