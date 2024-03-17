@@ -6,7 +6,6 @@ import Cart from './Cart/Cart';
 import Drawer from '@material-ui/core/Drawer';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Badge from '@material-ui/core/Badge';
 
 
@@ -27,7 +26,7 @@ export type CardItemType = {
 
 
 const getProducts = async (): Promise<CardItemType[]> => {
-  await (await fetch("https://fakestoreapi.com/products")).json();
+  return await (await fetch("https://fakestoreapi.com/products")).json();
 }
 
 const App = () => {
@@ -40,9 +39,7 @@ const App = () => {
   console.log(data);
 
 
-  const getTotalItems = (items: CardItemType[]) => {
-    items.reduce((ack: number, item) => ack + item.amount, 0)
-  }
+  const getTotalItems = (item: CardItemType[]) => item.reduce((ack: number, item) => ack + item.amount, 0);
 
   const handleAddToCart = (clickedItem: CardItemType) => {
     setCartItems(prev => {
@@ -58,22 +55,20 @@ const App = () => {
 
 
   const handleRemoveFromCart = (id: number) => {
-    setCartItems(prev => {
-      prev.reduce((ack, item) => {
-        if (item.id === id) {
-          if (item.amount === 1) return ack;
-          return [...ack, { ...item, amount: item.amount - 1 }];
-        } else {
-          return [...ack, item];
-        }
-      }, [] as CardItemType[])
-    });
-  };
+    setCartItems(prev => prev.reduce((ack, item) => {
+      if (item.id === id) {
+        if (item.amount === 1) return ack;
+        return [...ack, { ...item, amount: item.amount + 1 }];
+      } else {
+        return [...ack, item];
+      }
+    }, [] as CardItemType[]))
+  }
   if (isLoading) return <Laoder />;
   if (error) return <div>Something Went Wrong....</div>
   return (
     <Wrapper>
-      <Drawer anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
+      <Drawer anchor='right' open={cartOpne} onClose={() => setCartOpen(false)}>
         <Cart
           cartItems={cartItems}
           addToCart={handleAddToCart}
@@ -82,7 +77,7 @@ const App = () => {
       </Drawer>
       <StyledButton onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color='error'>
-          <AddShoppingCartIcon />
+          Buy
         </Badge>
       </StyledButton>
       <Grid container spacing={3}>
